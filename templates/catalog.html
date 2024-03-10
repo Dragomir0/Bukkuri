@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="title-bar">
+        <h4 class="text-center">Book Catalog</h4>
+        <!-- Search Box -->
+        <div class="row mt-3 mb-3">
+            <div class="col-md-6 offset-md-3">
+                <input type="text" id="searchInput" class="form-control" placeholder="Search a book">
+            </div>
+        </div>
+    </div>
+
+    <div class="livres-available row" id="bookList">
+        {% for livre in livres %}
+        <div class="book-disponibles col-md-6">
+            <div class="book-card row">
+                <div class="col-md-4">
+                    <img src="{{ livre.image_url }}" alt="{{ livre.titre }}" class="book-page-image">
+                </div>
+                <div class="col-md-8">
+                    <h5 class="book-title">{{ livre.titre }}</h5>
+                    <p class="book-author">Author: {{ livre.auteur }}</p>
+                    <p class="book-description">{{ livre.description | truncate(100) }}</p>
+                    <div class="text-center">
+                        <a href="{{ url_for('page_livre', livre_id=livre.id) }}"
+                            class="btn btn-primary search-button">Find out more</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% if not livres %}
+    <p class="text-center mt-4">No books found</p>
+    {% endif %}
+</div>
+{% endblock %}

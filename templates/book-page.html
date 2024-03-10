@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="book-page">
+  <div class="container mt-5">
+    <div class="row">
+      <!-- Image cote gauche de la page -->
+      <div class="col-md-4">
+        <img src="{{ livre.image_url }}" alt="{{ livre.titre }}" class="book-page-image">
+      </div>
+
+      <!-- Text et Description cote droit de la page -->
+      <div class="col-md-8">
+        <h4 class="book-page-title">{{ livre.titre }}</h4>
+        <p class="book-author">Auteur: {{ livre.auteur }}</p>
+        <p class="book-publication-date">Date de Publication: {{ livre.date_publication }}</p>
+        <p class="book-category">Catégorie: {{ livre.categorie }}</p>
+        <p class="book-description">Description: {{ livre.description }}</p>
+        <div class="book-links">
+          {% if livre.preview_link %}
+          <a href="{{ livre.preview_link }}" class="btn btn-primary" target="_blank">Preview</a>
+          {% endif %}
+          {% if livre.info_link %}
+          <a href="{{ livre.info_link }}" class="btn btn-secondary" target="_blank">More Information</a>
+          {% endif %}
+          {% if livre.buy_link %}
+          <a href="{{ livre.buy_link }}" class="btn btn-success" target="_blank">Buy</a>
+          {% endif %}
+        </div>
+        <a href="{{ url_for('index') }}" class="return-link">Back to home page</a>
+      </div>
+    </div>
+    
+    <form action="{{ url_for('delete_book', livre_id=livre.id) }}" method="POST">
+      <button type="submit" class="btn btn-danger">Delete</button>
+    </form>
+  </div>
+</div>
+{% endblock %}
