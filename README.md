@@ -1,4 +1,4 @@
-# Bokkuri
+# Bukkuri
 
 A dynamic platform dedicated to enhancing the experience of Japanese language learners and book enthusiasts.
 
