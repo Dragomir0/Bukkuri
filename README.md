@@ -1,6 +1,6 @@
 # Bukkuri
 
-A dynamic platform dedicated to enhancing the experience of Japanese language learners and book enthusiasts.
+Bukkuri is a free website dedicated to helping learners of Japanese interact with native content
 
 ### Requirements
 
