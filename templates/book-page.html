@@ -2,7 +2,7 @@
 
 {% block content %}
 <div class="book-page">
-  <div class="container mt-5">
+  <div class="container mt-0">
     <div class="row">
       <!-- Image cote gauche de la page -->
       <div class="col-md-4">
@@ -12,9 +12,9 @@
       <!-- Text et Description cote droit de la page -->
       <div class="col-md-8">
         <h4 class="book-page-title">{{ livre.titre }}</h4>
-        <p class="book-author">Auteur: {{ livre.auteur }}</p>
-        <p class="book-publication-date">Date de Publication: {{ livre.date_publication }}</p>
-        <p class="book-category">Catégorie: {{ livre.categorie }}</p>
+        <p class="book-author">Author: {{ livre.auteur }}</p>
+        <p class="book-publication-date">Publish Date: {{ livre.date_publication }}</p>
+        <p class="book-category">Category: {{ livre.categorie }}</p>
         <p class="book-description">Description: {{ livre.description }}</p>
         <div class="book-links">
           {% if livre.preview_link %}

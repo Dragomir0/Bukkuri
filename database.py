@@ -1,4 +1,6 @@
 import sqlite3
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import UserMixin
 
 def _build_livre(result_set_item):
     livre = {}
@@ -66,3 +68,60 @@ class Database:
         query = "DELETE FROM livres WHERE id = ?"
         cursor.execute(query, (livre_id,))
         connection.commit()
+    
+    def get_user_by_id(self, user_id):
+        """Retrieve a user by ID."""
+        cursor = self.get_connection().cursor()
+        cursor.execute("SELECT * FROM users WHERE id = ?", (user_id,))
+        user_data = cursor.fetchone()
+        if user_data:
+            # Map column names to values
+            columns = [desc[0] for desc in cursor.description]
+            return dict(zip(columns, user_data))
+        return None
+
+    def validate_login(self, email, password):
+        """Validate user login using email and password."""
+        cursor = self.get_connection().cursor()
+        cursor.execute("SELECT id, email, password, username FROM users WHERE email = ?", (email,))
+        user_data = cursor.fetchone()
+        if user_data:
+            user_dict = dict(zip([column[0] for column in cursor.description], user_data))
+            if check_password_hash(user_dict['password'], password):
+                return user_dict
+        return None
+    
+    def add_user(self, username, email, password):
+        """Add a new user with hashed password."""
+        connection = self.get_connection()
+        cursor = connection.cursor()
+        hashed_password = generate_password_hash(password)
+        cursor.execute("INSERT INTO users (username, email, password) VALUES (?, ?, ?)", (username, email, hashed_password))
+        connection.commit()
+
+    def get_user(self, email):
+        """Retrieve a user by email."""
+        cursor = self.get_connection().cursor()
+        cursor.execute("SELECT id, email, password FROM users WHERE email = ?", (email,))
+        user_data = cursor.fetchone()
+        if user_data:
+            # Create a dictionary with column names as keys
+            columns = [column[0] for column in cursor.description]
+            return dict(zip(columns, user_data))
+        return None
+
+
+######### USER LOGIN #########
+
+class User(UserMixin):
+    def __init__(self, id, email, username):
+        self.id = id
+        self.email = email
+        self.username = username
+
+    @staticmethod
+    def get(user_id, db):
+        user_data = db.get_user_by_id(user_id)
+        if user_data:
+            return User(id=user_data['id'], email=user_data['email'], username=user_data['username'])
+        return None

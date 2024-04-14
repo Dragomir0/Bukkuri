@@ -2,25 +2,25 @@ document.querySelector('.search-icon').addEventListener('click', function () {
     document.getElementById('search-form').submit();
 });
 
-document.getElementById('searchInput').addEventListener('input', function () {
-    var searchValue = this.value.toLowerCase();
-    var books = document.getElementsByClassName('book-card');
-    var bookList = document.getElementById('bookList');
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
 
-    for (var i = 0; i < books.length; i++) {
-        var title = books[i].getElementsByClassName('book-title')[0].innerText.toLowerCase();
-        var author = books[i].getElementsByClassName('book-author')[0].innerText.toLowerCase();
+    searchInput.addEventListener('input', function() {
+        const searchValue = this.value.toLowerCase();
+        const books = document.querySelectorAll('.book-disponibles');
 
-        if (title.includes(searchValue) || author.includes(searchValue)) {
-            books[i].style.display = '';
-        } else {
-            books[i].style.display = 'none';
-        }
-    }
+        books.forEach(book => {
+            const title = book.querySelector('.book-title').innerText.toLowerCase();
+            const author = book.querySelector('.book-author').innerText.toLowerCase();
 
-    // Remove filtered-out items and move remaining items to the top
-    var removedItems = document.querySelectorAll('.book-card:not([style="display: ;"])');
-    removedItems.forEach(function (item) {
-        bookList.removeChild(item.parentElement.parentElement);
+            if (title.includes(searchValue) || author.includes(searchValue)) {
+                book.style.display = '';  // Show the book
+            } else {
+                book.style.display = 'none';  // Hide the book
+            }
+        });
     });
 });
+
+
+

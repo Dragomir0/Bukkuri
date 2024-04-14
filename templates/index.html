@@ -15,8 +15,7 @@
     <section class="content">
         <h3>Books for your level</h3>
         <div class="description-principale">
-            <p>The Bukkuri community evaluates each book, anime, or TV series based on an approximate language
-                proficiency level, helping you discover content tailored to your skills.</p>
+            <p>We evaluate each book, anime, or TV series based on an approximate language proficiency level, helping you discover content tailored to your skills.</p>
             <p>Our extensive database already houses a diverse collection of books and users can also add to it.</p>
         </div>
         <h3>Popular books:</h3>
@@ -28,8 +27,6 @@
                     <img src="{{ livre.image_url }}" alt="{{ livre.titre }}">
                     <p class="book-title">{{ livre.titre }}</p>
                     <p class="book-author">{{ livre.auteur }}</p>
-                    <p class="book-publication-date">{{ livre.date_publication }}</p>
-                    <p class="book-category">{{ livre.categorie }}</p>
                 </a>
             </div>
             {% endfor %}

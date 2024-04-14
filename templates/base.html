@@ -10,11 +10,7 @@
     <link rel="icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100..900;1,100..900&display=swap"
-        rel="stylesheet">
-
-    <title>Bukkuri</title>
-</head>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet"></head>
 
 <body>
     <header>
@@ -26,6 +22,15 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('about') }}">About</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('catalog') }}">Catalog</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('fetch_books') }}">Add a book</a>
+                        </li>
+                        <li class="nav-item">
                             <form id="search-form" action="{{ url_for('search') }}" method="post"
                                 class="search-container">
                                 <input type="text" class="search-input" id="inputDescription" name="searchTerm"
@@ -35,16 +40,15 @@
                             </form>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('catalog') }}">Catalog</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('fetch_books') }}">Add a book</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('login') }}">Login</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('about') }}">About</a>
+                            <div class="user-info">
+                                {% if current_user.is_authenticated %}
+                                <span class="welcome-msg">{{ current_user.username }}</span>
+                                <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+                                {% else %}
+                                <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+                                <a class="sign-up nav-link" href="{{ url_for('register') }}">Sign up</a>
+                                {% endif %}
+                            </div>
                         </li>
                     </ul>
                 </div>
@@ -57,7 +61,7 @@
     {% endblock %}
 
     <footer>
-        <span>&copy; Copyright Ⓒ 2024. Bukkuri, licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA</a>
+        <span>Copyright Ⓒ 2024. Bukkuri, licensed under <a class="login-link" href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA</a>
     </footer>
     <script src="{{ url_for('static', filename='/js/script.js') }}"></script>
     <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>

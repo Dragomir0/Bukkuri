@@ -1,11 +1,12 @@
 body {
     font-family: "Poppins", sans-serif;
+    letter-spacing: 0.05em;
     background-color: #18181B;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
 }
-
+ 
 main {
     flex-grow: 1;
 }
@@ -38,16 +39,29 @@ h3 {
     margin: 0 auto;
     padding: 20px;
 }
+.welcome-msg {
+    font-weight: bold;
+    color: lightgreen;
+    padding: 6px 8px;
+}
+.user-info {
+    display: flex;
+    align-items: center; 
+}
 
-.navbar,
-.navbar .container-fluid,
-.navbar-collapse,
+.sign-up {
+    color: #ffffff;
+    background-color: #007bff;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.navbar,  .navbar .container-fluid, .navbar-collapse,
 .navbar-nav {
     background-color: black;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    /* padding: 15px 20px; Adjust the padding values to increase the height */
 }
 
 .navbar-nav {
@@ -56,18 +70,15 @@ h3 {
 
 .navbar-brand,
 .navbar-nav .nav-link,
-.menu a {
-    font-family: 'Exo 2', sans-serif;
+.menu a, .user-info{
     color: #ADB5BD;
     font-size: 16px;
     padding: 6px 9px;
-    margin: 2px;
 }
 
 .navbar-brand {
     font-size: 22px;
-    letter-spacing: 0.12em;
-    margin: 0px 20px 0px 0px;
+    letter-spacing: 0.1em;
     color: #ADB5BD;
     font-style: italic;
     font-weight: bold;
@@ -142,11 +153,12 @@ h3 {
 }
 
 .book-page-image {
-    max-width: 100%;
+    width: 70%;
     height: auto;
     border-radius: 8px;
     display: block;
     margin: 0 auto;
+    overflow: hidden;
 }
 
 .book-page .container {
@@ -198,13 +210,19 @@ h3 {
     justify-content: center;
     align-items: center;
 }
+.login-form {
+    display: block;
+    text-align: left; 
+    margin-bottom: 0.5rem;
+    color: #ADB5BD;
+}
 
 .navbar-brand:hover,
 .navbar-nav .nav-link:hover,
 .menu a:hover,
 .book-page .mailto-link:hover,
 .search-button:hover {
-    color: #396086;
+    color: #0069d9;
 }
 
 footer {
@@ -224,6 +242,7 @@ footer {
     color: #ADB5BD;
     font-size: 18px;
     margin-bottom: 20px;
+
 }
 
 .about-us h4 {
@@ -236,7 +255,8 @@ footer {
 /* Login Page Styles */
 .login-container {
     width: 100%;
-    min-height: 100vh;
+    min-height: 50vh;
+    font-size: 1.2rem;
     background-color: #181a1b;
     display: flex;
     align-items: center;
@@ -244,36 +264,54 @@ footer {
 }
 
 .login-content {
-    padding: 40px;
+    padding: 20px;
     text-align: center;
-    background-color: #ADB5BD;
+    background-color: #22262B;
     border-radius: 8px;
-    box-shadow: 0px 3px 15px rgba(195, 145, 111, 0.2);
+}
+
+.account-exists {
+    font-size: 16px;  
+    color: #ADB5BD;  
+    text-align: left;  
+}
+
+.login-link{
+    text-decoration: none;  
+}
+
+.login-link:hover {
+    color: #0069d9;  
+    text-decoration: underline;  
 }
 
 .login-content h2 {
-    color: #18181B;
-    font-weight: bold;
-    font-size: 28px;
-    margin-bottom: 20px;
+    color: #ADB5BD;
+    font-size: 20px;
+    margin-bottom: 10px;
 }
 
 .login-form input {
+    background-color:#22262B;
+    border-color: #ffffff;
     width: 100%;
-    padding: 15px;
+    padding: 5px 10px;
     margin-bottom: 20px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
+    border-radius: 4px;
+    font-size: 1.1rem;
+    color: #ADB5BD;
 }
 
 .login-form button {
-    background-color: #396086;
-    color: #fcfaf9;
+    background-color: #007bff;
+    color: #ffffff;
     border: none;
-    padding: 15px 20px;
-    border-radius: 8px;
+    margin: 20px 0 20px 0;
+    padding: 0.4em 1.2em 0.4em 1.2em;
+    border-radius: 12px;
     cursor: pointer;
     font-size: 16px;
+    width: 100%;
 }
 
 .login-form button:hover {
