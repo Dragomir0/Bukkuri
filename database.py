@@ -110,9 +110,6 @@ class Database:
             return dict(zip(columns, user_data))
         return None
 
-
-######### USER LOGIN #########
-
 class User(UserMixin):
     def __init__(self, id, email, username):
         self.id = id

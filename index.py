@@ -42,10 +42,10 @@ def login():
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
-        db = get_db()  # Ensure you retrieve the db instance
+        db = get_db() 
         user = db.validate_login(email, password)
         if user:
-            # Create a User instance with the id and email retrieved from the database
+            # Create a User instance 
             user_obj = User(id=user['id'], email=user['email'], username=user['username'])
             login_user(user_obj)
             return redirect(url_for('index'))
@@ -58,11 +58,6 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for('login'))
-
-@app.route('/dashboard')
-@login_required
-def dashboard():
-    return "Welcome to the Dashboard!"
 
 def get_db():
     db = getattr(g, '_database', None)
