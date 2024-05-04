@@ -6,7 +6,7 @@ body {
     flex-direction: column;
     min-height: 100vh;
 }
- 
+
 main {
     flex-grow: 1;
 }
@@ -39,14 +39,16 @@ h3 {
     margin: 0 auto;
     padding: 20px;
 }
+
 .welcome-msg {
     font-weight: bold;
     color: lightgreen;
     padding: 6px 8px;
 }
+
 .user-info {
     display: flex;
-    align-items: center; 
+    align-items: center;
 }
 
 .sign-up {
@@ -56,7 +58,9 @@ h3 {
     border-radius: 8px;
 }
 
-.navbar,  .navbar .container-fluid, .navbar-collapse,
+.navbar,
+.navbar .container-fluid,
+.navbar-collapse,
 .navbar-nav {
     background-color: black;
     display: flex;
@@ -70,7 +74,8 @@ h3 {
 
 .navbar-brand,
 .navbar-nav .nav-link,
-.menu a, .user-info{
+.menu a,
+.user-info {
     color: #ADB5BD;
     font-size: 16px;
     padding: 6px 9px;
@@ -114,6 +119,28 @@ h3 {
 }
 
 .book-card {
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.search-book-card:hover {
+    background-color: #33383D;
+}
+
+.search-book-card.selected {
+    background-color: #4CAF50;
+}
+
+.search-book-card img {
+    border: 2px solid transparent;
+}
+
+.search-book-card.selected img {
+    border-color: #fff;
+}
+
+.book-card,
+.search-book-card {
     font-size: 1.2rem;
     text-align: center;
     font-weight: bold;
@@ -122,7 +149,8 @@ h3 {
     color: inherit;
 }
 
-.book-card img {
+.book-card img,
+.search-book-card img {
     display: block;
     margin-left: auto;
     margin-right: auto;
@@ -210,9 +238,10 @@ h3 {
     justify-content: center;
     align-items: center;
 }
+
 .login-form {
     display: block;
-    text-align: left; 
+    text-align: left;
     margin-bottom: 0.5rem;
     color: #ADB5BD;
 }
@@ -233,8 +262,9 @@ footer {
     background-color: black;
     width: 100%;
     text-decoration: none;
-    flex-shrink: 0; 
-    margin-top: auto; /* This pushes the footer to the bottom */
+    flex-shrink: 0;
+    margin-top: auto;
+    /* This pushes the footer to the bottom */
 }
 
 /* About Us Section Styles */
@@ -273,18 +303,18 @@ footer {
 }
 
 .account-exists {
-    font-size: 16px;  
-    color: #ADB5BD;  
-    text-align: left;  
+    font-size: 16px;
+    color: #ADB5BD;
+    text-align: left;
 }
 
-.login-link{
-    text-decoration: none;  
+.login-link {
+    text-decoration: none;
 }
 
 .login-link:hover {
-    color: #0069d9;  
-    text-decoration: underline;  
+    color: #0069d9;
+    text-decoration: underline;
 }
 
 .login-content h2 {
@@ -294,7 +324,7 @@ footer {
 }
 
 .login-form input {
-    background-color:#22262B;
+    background-color: #22262B;
     border-color: #ffffff;
     width: 100%;
     padding: 5px 10px;
@@ -344,4 +374,35 @@ footer {
 .title-bar .col-md-6 {
     display: flex;
     align-items: center;
+}
+
+/* User Dashboard */
+
+.user-dashboard {
+    background-color: #2C3034;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+    color: #EFEFEF;
+}
+
+.user-details h3 {
+    color: #FFD700;  
+}
+
+.user-details p {
+    color: #FFF;
+    font-size: 18px;
+}
+
+.user-activities {
+    background-color: #22262B;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+    color: #EFEFEF;
+}
+
+.user-activities p {
+    font-size: 16px;
 }

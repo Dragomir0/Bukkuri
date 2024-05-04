@@ -22,5 +22,15 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-
+document.addEventListener('DOMContentLoaded', function() {
+    const searchBookCards = document.querySelectorAll('.search-book-card');
+    searchBookCards.forEach(card => {
+        card.addEventListener('click', function() {
+            this.classList.toggle('selected');
+            const bookId = this.getAttribute('data-book-id');
+            const input = document.querySelector(`input[name="book_ids"][value="${bookId}"]`);
+            input.checked = !input.checked;  
+        });
+    });
+});
 

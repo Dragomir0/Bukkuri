@@ -1,43 +1,42 @@
 {% extends "base.html" %}
 
 {% block content %}
-
 <div class="main-logo-container">
-    <video src="{{ url_for('static', filename='vid/mountain.mp4') }}" autoplay loop muted class="mountain-background"></video>
+    <video src="{{ url_for('static', filename='vid/mountain.mp4') }}" autoplay loop muted
+        class="mountain-background"></video>
     <div class="centered container">
         <div class="row">
             <h2 class="text-center">Add missing books to the catalog</h2>
         </div>
     </div>
 </div>
-
 <main>
     <section class="content">
         <h3>🔍 Search books</h3>
         <div class="description-principale">
-            <p>Enter a search term to find books with the Google Books API.</p>
-            <form action="{{ url_for('fetch_books') }}" method="POST" class="search-books-form" >
+            <form action="{{ url_for('fetch_books') }}" method="POST" class="search-books-form">
                 <input type="text" name="search_query" placeholder="Add a search term" class="form-control" required>
                 <button type="submit" class="btn btn-primary mt-3">Search</button>
             </form>
         </div>
-
         {% if books %}
         <h3 class="mt-4">📚 Search results:</h3>
-        <div class="book-results row">
-            {% for book in books %}
-            <div class="col-md-4 mb-4">
-                <div class="book-card">
-                    <h5 class="book-title">{{ book['volumeInfo'].get('title', 'Unknown title') }}</h5>
-                    <p class="book-author">Author: {{ ', '.join(book['volumeInfo'].get('authors', ['Unknown author'])) }}</p>
-                    <p class="book-publication-date">Publication date: {{ book['volumeInfo'].get('publishedDate', 'Unknown date') }}</p>
-                    <p class="book-category">Category: {{ ', '.join(book['volumeInfo'].get('categories', ['Unknown category'])) }}</p>
+        <p>Select the books you want to add to the catalog :</p>
+        <form action="{{ url_for('add_selected_books') }}" method="POST">
+            <div class="book-results row">
+                {% for book in books %}
+                <div class="col-md-4 mb-4 search-book-card" data-book-id="{{ book['id'] }}">
+                    <img src="{{ book['volumeInfo'].get('imageLinks', {}).get('thumbnail', 'https://via.placeholder.com/150') }}"
+                        alt="{{ book['volumeInfo'].get('title', 'Unknown title') }}" class="img-fluid">
+                    <p class="book-title">{{ book['volumeInfo'].get('title', 'Unknown title') }}</p>
+                    <p class="book-author">{{ ', '.join(book['volumeInfo'].get('authors', ['Unknown author'])) }}</p>
+                    <input type="checkbox" name="book_ids" value="{{ book['id'] }}" class="form-check-input" hidden>
                 </div>
+                {% endfor %}
+                <button type="submit" class="btn btn-primary mt-3">Add Selected Books</button>
             </div>
-            {% endfor %}
-        </div>
+        </form>
         {% endif %}
     </section>
 </main>
-
 {% endblock %}

@@ -1,13 +1,22 @@
-from flask import Flask, render_template, redirect, url_for, request, g
+from flask import Flask, render_template, redirect, url_for, request, g, session
+from flask_session import Session
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from database import Database, User
 import requests, random, os
 
-GOOGLE_BOOKS_API_KEY = os.environ.get('GOOGLE_BOOKS_API_KEY')
-GOOGLE_BOOKS_API_URL = "https://www.googleapis.com/books/v1/volumes"
-
 app = Flask(__name__, static_url_path="", static_folder="static")
 app.secret_key = os.environ.get('SECRET_KEY')
+
+session_dir = os.path.join(os.getcwd(), 'session_data')
+os.makedirs(session_dir, exist_ok=True)  
+
+app.config['SESSION_TYPE'] = 'filesystem'
+app.config['SESSION_FILE_DIR'] = session_dir
+Session(app)
+
+
+GOOGLE_BOOKS_API_KEY = os.environ.get('GOOGLE_BOOKS_API_KEY')
+GOOGLE_BOOKS_API_URL = "https://www.googleapis.com/books/v1/volumes"
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -109,47 +118,65 @@ def search():
 
     return render_template('search.html')
 
-# Fetch books from Google Books API and add them to the database
 @app.route('/fetch_books', methods=['GET', 'POST'])
 def fetch_books():
     if request.method == 'POST':
-        search_query = request.form.get('search_query')
-        if search_query:
-            books = fetch_books_from_google(search_query)
-            db = get_db()
+        search_query = request.form['search_query']
+        books = fetch_books_from_google(search_query)
+        if books:
+            # Store only book IDs in the session
+            session['book_ids'] = [book['id'] for book in books]
+            # Keep the books in memory for immediate display
+            session['books'] = {book['id']: book for book in books}
+        else:
+            session.pop('books', None)
+            session.pop('book_ids', None)
+        return render_template('fetch-books.html', books=books)
 
-            if books:
-                for book in books:
-                    titre = book['volumeInfo'].get('title', 'Unknown Title')
-                    auteur = ', '.join(book['volumeInfo'].get('authors', ['Unknown Author']))
-                    description = book['volumeInfo'].get('description', 'No Description')
-                    date_publication = book['volumeInfo'].get('publishedDate', 'Unknown Date')
-                    categorie = ', '.join(book['volumeInfo'].get('categories', ['Unknown Category']))
-                    image_url = book['volumeInfo'].get('imageLinks', {}).get('thumbnail', '')
-                    preview_link = book.get("accessInfo", {}).get("webReaderLink", "")
-                    info_link = book['volumeInfo'].get("infoLink", "")
-                    buy_link = book.get("saleInfo", {}).get("buyLink", "")
-
-                    # Add the book to the database if it doesn't exist
-                    if not db.is_book_exist(titre, auteur):
-                        db.add_livre(titre, date_publication, description, auteur, categorie, image_url, preview_link, info_link, buy_link)
-                    
-            # Redirect to catalog page after fetching books
-            return redirect(url_for('catalog'))
-
-    # For GET request or if no books are fetched, just show the fetch-books page
     return render_template('fetch-books.html')
 
 def fetch_books_from_google(query):
     params = {
         'q': query,
+        'maxResults': 6,  # Limit the number of results to 6
         'key': GOOGLE_BOOKS_API_KEY
     }
     response = requests.get(GOOGLE_BOOKS_API_URL, params=params)
     if response.status_code == 200:
-        return response.json()['items']
+        return response.json().get('items', [])
     else:
         return None
+
+@app.route('/add_selected_books', methods=['POST'])
+def add_selected_books():
+    selected_book_ids = request.form.getlist('book_ids')
+    if selected_book_ids:
+        all_books = session.get('books', {})
+        db = get_db()
+
+        for book_id in selected_book_ids:
+            book = all_books.get(book_id)
+            if book:
+                titre = book['volumeInfo'].get('title', 'Unknown Title')
+                auteur = ', '.join(book['volumeInfo'].get('authors', ['Unknown Author']))
+                description = book['volumeInfo'].get('description', 'No Description')
+                date_publication = book['volumeInfo'].get('publishedDate', 'Unknown Date')
+                categorie = ', '.join(book['volumeInfo'].get('categories', ['Unknown Category']))
+                image_url = book['volumeInfo'].get('imageLinks', {}).get('thumbnail', '')
+                preview_link = book.get("accessInfo", {}).get("webReaderLink", "")
+                info_link = book['volumeInfo'].get("infoLink", "")
+                buy_link = book.get("saleInfo", {}).get("buyLink", "")
+
+                # Check if the book already exists in the database to avoid duplicates
+                if not db.is_book_exist(titre, auteur):
+                    db.add_livre(titre, date_publication, description, auteur, categorie, image_url, preview_link, info_link, buy_link)
+
+        # Clear session after adding books
+        session.pop('books', None)
+        session.pop('book_ids', None)
+        return redirect(url_for('catalog'))
+
+    return redirect(url_for('fetch_books'))
 
 @app.route('/delete_book/<int:livre_id>', methods=['POST'])
 def delete_book(livre_id):
@@ -166,3 +193,8 @@ def catalog():
     db = get_db()
     livres = db.get_livres()
     return render_template('catalog.html', title='Catalogue', livres=livres)
+
+@app.route('/dashboard')
+@login_required
+def dashboard():
+    return render_template('dashboard.html')
