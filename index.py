@@ -1,5 +1,5 @@
 from flask import Flask, render_template, redirect, url_for, request, g, session
-from flask_session import Session
+from flask_session.__init__ import Session
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from database import Database, User
 import requests, random, os
