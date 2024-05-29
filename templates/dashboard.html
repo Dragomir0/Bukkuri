@@ -4,12 +4,21 @@
 <div class="main-logo-container">
     <div class="centered container">
         <div class="row">
-            <h3 class="text-center">{{ current_user.username }}'s Dashboard</h3>
+            {% if session.user %}
+            <h3 class="text-center">{{ session.user['userinfo']['nickname'] }}'s Dashboard</h3>
             <div class="col-md-12 user-dashboard">
                 <div class="user-details">
-                    <p>Email: {{ current_user.email }}</p>
+                    <p>Email: {{ session.user['userinfo']['email'] }}</p>
                 </div>
             </div>
+            {% else %}
+            <h3 class="text-center">User Dashboard</h3>
+            <div class="col-md-12 user-dashboard">
+                <div class="user-details">
+                    <p>Please log in to view your dashboard.</p>
+                </div>
+            </div>
+            {% endif %}
         </div>
     </div>
 </div>

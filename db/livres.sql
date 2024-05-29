@@ -10,10 +10,3 @@ CREATE TABLE livres (
     info_link VARCHAR(255),
     buy_link VARCHAR(255)
 );
-
-CREATE TABLE users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    username TEXT UNIQUE NOT NULL,
-    email TEXT UNIQUE NOT NULL,
-    password TEXT NOT NULL
-);

@@ -1,11 +1,18 @@
+from os import environ as env
+from urllib.parse import quote_plus, urlencode
+from authlib.integrations.flask_client import OAuth
+from dotenv import find_dotenv, load_dotenv
 from flask import Flask, render_template, redirect, url_for, request, g, session
-from flask_session.__init__ import Session
-from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+from flask_session import Session
 from database import Database, User
-import requests, random, os
+import requests, random, os, json
 
-app = Flask(__name__, static_url_path="", static_folder="static")
-app.secret_key = os.environ.get('SECRET_KEY')
+ENV_FILE = find_dotenv()
+if ENV_FILE:
+    load_dotenv(ENV_FILE)
+
+app = Flask(__name__)
+app.secret_key = env.get("APP_SECRET_KEY")
 
 session_dir = os.path.join(os.getcwd(), 'session_data')
 os.makedirs(session_dir, exist_ok=True)  
@@ -14,59 +21,47 @@ app.config['SESSION_TYPE'] = 'filesystem'
 app.config['SESSION_FILE_DIR'] = session_dir
 Session(app)
 
-
 GOOGLE_BOOKS_API_KEY = os.environ.get('GOOGLE_BOOKS_API_KEY')
 GOOGLE_BOOKS_API_URL = "https://www.googleapis.com/books/v1/volumes"
 
-login_manager = LoginManager()
-login_manager.init_app(app)
-login_manager.login_view = 'login'
+oauth = OAuth(app)
 
-@login_manager.user_loader
-def load_user(user_id):
-    db = get_db()  
-    return User.get(user_id, db)
+oauth.register(
+    "auth0",
+    client_id=env.get("AUTH0_CLIENT_ID"),
+    client_secret=env.get("AUTH0_CLIENT_SECRET"),
+    client_kwargs={
+        "scope": "openid profile email",
+    },
+    server_metadata_url=f'https://{env.get("AUTH0_DOMAIN")}/.well-known/openid-configuration'
+)
 
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    if request.method == 'POST':
-        username = request.form['username']
-        email = request.form['email']
-        password = request.form['password']
-        db = Database()
-
-        # Check if the email already exists
-        if db.get_user(email):
-            return render_template('register.html', error="Email already registered. Please login or use a different email.")
-
-        # If the email is not registered, proceed to register the user
-        db.add_user(username, email, password)
-        
-        # Redirect to the login page after successful registration
-        return redirect(url_for('login'))
-    return render_template('register.html')
-
-@app.route('/login', methods=['GET', 'POST'])
+@app.route("/login")
 def login():
-    if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
-        db = get_db() 
-        user = db.validate_login(email, password)
-        if user:
-            # Create a User instance 
-            user_obj = User(id=user['id'], email=user['email'], username=user['username'])
-            login_user(user_obj)
-            return redirect(url_for('index'))
-        else:
-            return render_template('login.html', error='Invalid credentials')
-    return render_template('login.html')
+    return oauth.auth0.authorize_redirect(
+        redirect_uri=url_for("callback", _external=True)
+    )
 
-@app.route('/logout')
-@login_required
+@app.route("/callback", methods=["GET", "POST"])
+def callback():
+    token = oauth.auth0.authorize_access_token()
+    session["user"] = token
+    return redirect(url_for("index"))
+
+@app.route("/logout")
 def logout():
-    logout_user()
-    return redirect(url_for('login'))
+    session.clear()
+    return redirect(
+        "https://" + env.get("AUTH0_DOMAIN")
+        + "/v2/logout?"
+        + urlencode(
+            {
+                "returnTo": url_for("index", _external=True),
+                "client_id": env.get("AUTH0_CLIENT_ID"),
+            },
+            quote_via=quote_plus,
+        )
+    )
 
 def get_db():
     db = getattr(g, '_database', None)
@@ -90,7 +85,7 @@ def index():
     livres = db.get_livres()
     random.shuffle(livres)
 
-    return render_template('index.html', title='Index', livres=livres[:6])
+    return render_template('index.html', title='Index', livres=livres[:6], session=session.get('user'), pretty=json.dumps(session.get('user'), indent=4))
 
 # Book page route
 @app.route('/livre/<livre_id>')
@@ -195,6 +190,7 @@ def catalog():
     return render_template('catalog.html', title='Catalogue', livres=livres)
 
 @app.route('/dashboard')
-@login_required
 def dashboard():
-    return render_template('dashboard.html')
+    if 'user' in session:
+        return render_template('dashboard.html')
+    return redirect(url_for('login'))
