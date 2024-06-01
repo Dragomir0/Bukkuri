@@ -23,6 +23,14 @@
                     <h5 class="book-title">{{ livre.titre }}</h5>
                     <p class="book-author">Author: {{ livre.auteur }}</p>
                     <p class="book-description">{{ livre.description | truncate(100) }}</p>
+                    
+                    <!-- Star rating display -->
+                    <div class="book-review" data-review-score="{{ livre.review_score | default(0) }}">
+                        {% for star in range(5) %}
+                        <i class="material-icons star-icon">star</i>
+                        {% endfor %}
+                    </div>
+                    
                     <div class="text-center">
                         <a href="{{ url_for('page_livre', livre_id=livre.id) }}"
                             class="btn btn-primary search-button">Find out more</a>

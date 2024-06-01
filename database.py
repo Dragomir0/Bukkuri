@@ -12,6 +12,7 @@ def _build_livre(result_set_item):
         "preview_link": result_set_item[7],
         "info_link": result_set_item[8],
         "buy_link": result_set_item[9],
+        "review_score": result_set_item[10],
     }
     return livre
 
@@ -30,29 +31,29 @@ class Database:
 
     def get_livres(self):
         cursor = self.get_connection().cursor()
-        query = "SELECT id, titre, date_publication, description, auteur, categorie, image_url, preview_link, info_link, buy_link FROM livres"
+        query = "SELECT id, titre, date_publication, description, auteur, categorie, image_url, preview_link, info_link, buy_link, review_score FROM livres"
         cursor.execute(query)
         all_data = cursor.fetchall()
         return [_build_livre(item) for item in all_data]
 
     def get_livre(self, livre_id):
         cursor = self.get_connection().cursor()
-        query = "SELECT id, titre, date_publication, description, auteur, categorie, image_url, preview_link, info_link, buy_link FROM livres WHERE id = ?"
+        query = "SELECT id, titre, date_publication, description, auteur, categorie, image_url, preview_link, info_link, buy_link, review_score FROM livres WHERE id = ?"
         cursor.execute(query, (livre_id,))
         item = cursor.fetchone()
         return _build_livre(item) if item else None
 
-    def add_livre(self, titre, date_publication, description, auteur, categorie, image_url, preview_link, info_link, buy_link):
+    def add_livre(self, titre, date_publication, description, auteur, categorie, image_url, preview_link, info_link, buy_link, review_score):
         connection = self.get_connection()
-        query = ("INSERT INTO livres (titre, date_publication, description, auteur, categorie, image_url, preview_link, info_link, buy_link)"
-                 " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)")
-        connection.execute(query, (titre, date_publication, description, auteur, categorie, image_url, preview_link, info_link, buy_link))
+        query = ("INSERT INTO livres (titre, date_publication, description, auteur, categorie, image_url, preview_link, info_link, buy_link, review_score)"
+                " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+        connection.execute(query, (titre, date_publication, description, auteur, categorie, image_url, preview_link, info_link, buy_link, review_score))
         cursor = connection.cursor()
         cursor.execute("SELECT last_insert_rowid()")
         lastId = cursor.fetchone()[0]
         connection.commit()
         return lastId
-    
+
     def is_book_exist(self, titre, auteur):
         connection = self.get_connection()
         cursor = connection.cursor()

@@ -8,5 +8,6 @@ CREATE TABLE livres (
     image_url VARCHAR(255),
     preview_link VARCHAR(255),
     info_link VARCHAR(255),
-    buy_link VARCHAR(255)
+    buy_link VARCHAR(255),
+    review_score INTEGER
 );

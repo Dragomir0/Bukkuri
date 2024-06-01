@@ -3,7 +3,8 @@
 {% block content %}
 
 <div class="main-logo-container">
-    <video src="{{ url_for('static', filename='vid/mountain.mp4') }}" autoplay loop muted class="mountain-background"></video>
+    <video src="{{ url_for('static', filename='vid/mountain.mp4') }}" autoplay loop muted
+        class="mountain-background"></video>
     <div class="centered container">
         <div class="row">
             <h2 class="text-center">Discover your portal to Japanese books</h2>
@@ -15,18 +16,23 @@
     <section class="content">
         <h3>Books for your level</h3>
         <div class="description-principale">
-            <p>We evaluate each book, anime, or TV series based on an approximate language proficiency level, helping you discover content tailored to your skills.</p>
-            <p>Our extensive database already houses a diverse collection of books and users can also add to it.</p>
+            <Our>Our difficulty ratings are powered by our community. Any user can grade their completed books, helping
+                you discover content tailored to your skills. Our database already houses a diverse collection of books
+                that users can add to.</p>
         </div>
         <h3>Popular books:</h3>
         <div class="book-disponibles row">
-            <p>Click on a book to find out more about it:</p>
-            {% for livre in livres[:6] %}
+            {% for livre in livres %}
             <div class="col-md-4 mb-4">
                 <a href="{{ url_for('page_livre', livre_id=livre.id) }}" class="book-card">
                     <img src="{{ livre.image_url }}" alt="{{ livre.titre }}">
                     <p class="book-title">{{ livre.titre }}</p>
                     <p class="book-author">{{ livre.auteur }}</p>
+                    <div class="book-review" data-review-score="{{ livre.review_score | default(0) }}">
+                        {% for star in range(5) %}
+                        <i class="material-icons star-icon">star</i>
+                        {% endfor %}
+                    </div>
                 </a>
             </div>
             {% endfor %}

@@ -16,6 +16,14 @@
         <p class="book-publication-date">Publish Date: {{ livre.date_publication }}</p>
         <p class="book-category">Category: {{ livre.categorie }}</p>
         <p class="book-description">Description: {{ livre.description }}</p>
+        
+        <!-- Star rating display -->
+        <div class="book-review" data-review-score="{{ livre.review_score | default(0) }}">
+          {% for star in range(5) %}
+          <i class="material-icons star-icon">star</i>
+          {% endfor %}
+        </div>
+
         <div class="book-links">
           {% if livre.preview_link %}
           <a href="{{ livre.preview_link }}" class="btn btn-primary" target="_blank">Preview</a>

@@ -34,3 +34,14 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+document.addEventListener('DOMContentLoaded', function() {
+    const bookReviews = document.querySelectorAll('.book-review');
+    bookReviews.forEach(review => {
+        const reviewScore = parseInt(review.getAttribute('data-review-score'));
+        const stars = review.querySelectorAll('.star-icon');
+        for (let i = 0; i < reviewScore; i++) {
+            stars[i].style.color = '#ffeb3b'; 
+        }
+    });
+});
+

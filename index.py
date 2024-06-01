@@ -164,7 +164,7 @@ def add_selected_books():
 
                 # Check if the book already exists in the database to avoid duplicates
                 if not db.is_book_exist(titre, auteur):
-                    db.add_livre(titre, date_publication, description, auteur, categorie, image_url, preview_link, info_link, buy_link)
+                    db.add_livre(titre, date_publication, description, auteur, categorie, image_url, preview_link, info_link, buy_link, review_score=0)
 
         # Clear session after adding books
         session.pop('books', None)
